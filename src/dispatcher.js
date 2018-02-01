@@ -16,19 +16,31 @@ const getSearch = (queryParams, params) => {
 export default (param) => {
   const { hostname, path } = url.parse(param.url);
   const body = [];
+  const response = {};
   return new Promise((resolve, reject) => {
+    const query = querystring.stringify(param.params);
+    console.log(query);
     const options = {
       hostname,
-      path,
+      path: path + getSearch(param.params),
+      method: param.method,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(query),
+      },
     };
+
+
     const req = http.request(options, (res) => {
-      resolve(res);
-      // res.on('data', (chunk) => {
-      //   body.push(chunk.toString());
-      // }).on('end', () => {
-      //   const html = body.join();
-        
-      // });
+      response.status = res.statusCode;
+      response.statusText = res.statusMessage;
+
+      res.on('data', (chunk) => {
+        body.push(chunk.toString());
+      }).on('end', () => {
+        const html = body.join();
+      });
+      resolve(response);
     });
     req.end();
     // console.log(param.url);

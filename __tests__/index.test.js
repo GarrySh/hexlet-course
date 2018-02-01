@@ -19,19 +19,19 @@ describe('HttpRequestPromise', () => {
     }).catch(done);
   });
 
-  // it('#get with params', (done) => {
-  //   const params = { a: 'v', d: 'k' };
-  //   const host = 'http://ru.hexlet.io';
-  //   const body = 'hello, world';
-  //   nock(host)
-  //     .get(`/?${querystring.stringify(params)}`)
-  //     .reply(200, body);
+  it('#get with params', (done) => {
+    const params = { a: 'v', d: 'k' };
+    const host = 'http://ru.hexlet.io';
+    const body = 'hello, world';
+    nock(host)
+      .get(`/?${querystring.stringify(params)}`)
+      .reply(200, body);
 
-  //   get(host, { params }).then((response) => {
-  //     expect(response.data).toBe(body);
-  //     done();
-  //   });
-  // });
+    get(host, { params }).then((response) => {
+      expect(response.data).toBe(body);
+      done();
+    });
+  });
 
   // it('#get with params and query', (done) => {
   //   const params = { a: 'v', d: 'k' };
