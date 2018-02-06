@@ -14,51 +14,53 @@ const getSearch = (queryParams, params) => {
 
 // BEGIN (write your solution here)
 export default (param) => {
-  const { hostname, path } = url.parse(param.url);
-  const body = [];
-  const response = {};
+  const urlObject = url.parse(param.url, true);
+  const postData = querystring.stringify(param.data);
+  console.log(postData);
+
+  const options = {
+    hostname: urlObject.hostname,
+    method: param.method,
+    path: urlObject.pathname + getSearch(urlObject.query, param.params),
+  };
+
+  // console.log(options);
   return new Promise((resolve, reject) => {
-    const query = querystring.stringify(param.params);
-    console.log(query);
-    const options = {
-      hostname,
-      path: path + getSearch(param.params),
-      method: param.method,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(query),
-      },
-    };
-
-
     const req = http.request(options, (res) => {
-      response.status = res.statusCode;
-      response.statusText = res.statusMessage;
+      const response = {
+        status: res.statusCode,
+        statusText: res.statusMessage,
+        data: '',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(postData),
+        },
+      };
+
+      const data = [];
 
       res.on('data', (chunk) => {
-        body.push(chunk.toString());
-      }).on('end', () => {
-        const html = body.join();
+        data.push(chunk.toString());
       });
-      resolve(response);
+
+      res.on('end', () => {
+        response.data = data.join();
+        resolve(response);
+        // console.log(response);
+      });
+
+      res.on('error', (error) => {
+        console.error('Ошибка при получении http запроса', error);
+        reject(new Error('Ошибка при получении http запроса'));
+      });
     });
+
+    req.on('error', (error) => {
+      console.error('Ошибка формирования http запроса', error);
+      reject(new Error('Ошибка формирования http запроса'));
+    });
+    req.write(param.data);
     req.end();
-    // console.log(param.url);
   });
 };
 // END
-// http.get(address, (res) => {
-//   res.on('data', (chunk) => {
-//     body.push(chunk.toString());
-//   }).on('end', () => {
-//     const data = body.join();
-//     const actualTitle = getTitle(data);
-//     if (expectedTitle === actualTitle) {
-//       callback(null, address);
-//       return;
-//     }
-//     const newLinks = getLinks(data);
-//     visited.add(current);
-//     search([...newLinks, ...rest], visited);
-//   });
-// });
