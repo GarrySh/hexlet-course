@@ -1,99 +1,74 @@
-import url from 'url';
-import querystring from 'querystring';
-import nock from 'nock';
+/* eslint-disable no-restricted-syntax */
 
-import { get, post } from '../src';
+import Seq from '../src';
 
-nock.disableNetConnect();
+describe('Generator of Iterators', () => {
+  it('set 1', () => {
+    // const simple = new Seq([1, 2, 3, 4, 5]);
 
-describe('HttpRequestPromise', () => {
-  it('#get', (done) => {
-    const host = 'http://ru.hexlet.io';
-    const status = 301;
-    nock(host).get('/').reply(status);
+    // for (const val of simple) {
+    //   console.log(val);  //'0' '1' '2' '3' '4' '5' 
+    // }
+    const seq = new Seq(0, x => x + 1);
+    const result = seq.take(2);
+    const actual = [];
+    for (const value of result) {
+      actual.push(value);
+    }
+    expect(actual).toEqual([0, 1]);
 
-    get(host).then((response) => {
-      expect(response.status).toBe(status);
-      done();
-    }).catch(done);
+    const actual2 = [];
+    for (const value of seq.take(3)) {
+      actual2.push(value);
+    }
+    expect(actual2).toEqual([0, 1, 2]);
   });
 
-  it('#get with params', (done) => {
-    const params = { a: 'v', d: 'k' };
-    const host = 'http://ru.hexlet.io';
-    const body = 'hello, world';
-    nock(host)
-      .get(`/?${querystring.stringify(params)}`)
-      .reply(200, body);
+  // it('set 2', () => {
+  //   const seq = new Seq(1, x => x + 1);
+  //   const result = seq.skip(200).take(3);
+  //   const actual = [];
+  //   for (const value of result) {
+  //     actual.push(value);
+  //   }
+  //   expect(actual).toEqual([201, 202, 203]);
 
-    get(host, { params }).then((response) => {
-      expect(response.data).toBe(body);
-      done();
-    });
-  });
+  //   const actual2 = [];
+  //   for (const value of seq.skip(5).skip(5).take(1)) {
+  //     actual2.push(value);
+  //   }
+  //   expect(actual2).toEqual([11]);
+  // });
 
-  it('#get with params and query', (done) => {
-    const params = { a: 'v', d: 'k' };
-    const q = 'index';
-    const host = 'http://ru.hexlet.io';
-    const hostWithQuery = url.resolve(host, `/?q=${q}`);
-    const body = 'hello, world';
-    const query = querystring.stringify({ q, ...params });
-    nock(host)
-      .get(`/?${query}`)
-      .reply(200, body);
+  // it('set 3', () => {
+  //   const seq = new Seq(0, x => (x % 3 === 0 ? x + 1 : x + 2));
+  //   const result = seq.take(10);
+  //   const actual = [];
+  //   for (const value of result) {
+  //     actual.push(value);
+  //   }
+  //   expect(actual).toEqual([0, 1, 3, 4, 6, 7, 9, 10, 12, 13]);
 
-    get(hostWithQuery, { params })
-      .then((response) => {
-        expect(response.data).toBe(body);
-        done();
-      }).catch(() => {});
-  });
+  //   const actual2 = [];
+  //   for (const value of seq.take(3)) {
+  //     actual2.push(value);
+  //   }
+  //   expect(actual2).toEqual([0, 1, 3]);
+  // });
 
-  it('#get 2', (done) => {
-    const host = 'http://ru.hexlet.io';
-    const pathname = '/users/new';
-    const body = 'hello, world';
-    nock(host).get(pathname).reply(200, body);
+  // it('set 4', () => {
+  //   const seq = new Seq(7, x => x + 2);
+  //   const result = seq.take(2);
+  //   const actual = [];
+  //   for (const value of result) {
+  //     actual.push(value);
+  //   }
+  //   expect(actual).toEqual([7, 9]);
 
-    get(`${host}${pathname}`).then((response) => {
-      expect(response.data).toBe(body);
-      done();
-    }).catch(done.fail);
-  });
-
-  it('#get 3', (done) => {
-    const host = 'http://ru.hexlet.io';
-    const pathname = '/users/new';
-    nock(host).get(pathname).replyWithError('timeout error');
-
-    get(`${host}${pathname}`).then(() => {
-      fail('Must be timed out');
-    }).catch((err) => {
-      expect(err).not.toBeNull();
-      done();
-    });
-  });
-
-  it('#post', (done) => {
-    const host = 'http://ru.hexlet.io';
-    const pathname = '/users';
-    const data = { nickname: 'scooter' };
-    const preparedData = querystring.stringify(data);
-    const status = 302;
-    nock(host, {
-      reqheaders: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': preparedData.length.toString(),
-      },
-    })
-      .log(console.log)
-      .post(pathname, data).reply(status, data);
-
-    post(`${host}${pathname}`, data).then((response) => {
-      expect(response.status).toBe(status);
-      expect(response).toHaveProperty('data', JSON.stringify(data));
-      done();
-    }).catch(done.fail);
-  });
+  //   const actual2 = [];
+  //   for (const value of seq.skip(5).take(3)) {
+  //     actual2.push(value);
+  //   }
+  //   expect(actual2).toEqual([17, 19, 21]);
+  // });
 });

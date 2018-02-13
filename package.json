@@ -35,7 +35,8 @@
     "jest-cli": "*"
   },
   "dependencies": {
-    "nock": "^9.1.6"
+    "nock": "*",
+    "babel-polyfill": "*"
   },
   "repository": {
     "type": "git",

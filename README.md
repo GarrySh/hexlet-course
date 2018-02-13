@@ -1,5 +1,4 @@
-# project-clear
-Boilerplate config for new Node.JS projects
+# JS code practice
 
 ## Setup
 
