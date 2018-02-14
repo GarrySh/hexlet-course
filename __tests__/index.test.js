@@ -3,12 +3,22 @@
 import Seq from '../src';
 
 describe('Generator of Iterators', () => {
-  it('set 1', () => {
-    // const simple = new Seq([1, 2, 3, 4, 5]);
+  it('set 0', () => {
+    const seq = new Seq(0, x => x + 1);    
+    const result = seq.take(2);
+    const actual = [];
+    for (const value of result) {
+      actual.push(value);
+    }
+    expect(actual).toEqual([0, 1]);
 
-    // for (const val of simple) {
-    //   console.log(val);  //'0' '1' '2' '3' '4' '5' 
-    // }
+    const actual2 = [];
+    for (const value of seq.take(3)) {
+      actual2.push(value);
+    }
+    expect(actual2).toEqual([0, 1, 2]);
+  });
+  it('set 1', () => {
     const seq = new Seq(0, x => x + 1);
     const result = seq.take(2);
     const actual = [];
