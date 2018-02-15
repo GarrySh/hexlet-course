@@ -1,84 +1,92 @@
-/* eslint-disable no-restricted-syntax */
+import co from '../src';
 
-import Seq from '../src';
-
-describe('Generator of Iterators', () => {
-  it('set 0', () => {
-    const seq = new Seq(0, x => x + 1);    
-    const result = seq.take(2);
-    const actual = [];
-    for (const value of result) {
-      actual.push(value);
+const getPromise = (val, err) =>
+  new Promise((resolve, reject) => {
+    if (err) {
+      reject(err);
+      return;
     }
-    expect(actual).toEqual([0, 1]);
-
-    const actual2 = [];
-    for (const value of seq.take(3)) {
-      actual2.push(value);
-    }
-    expect(actual2).toEqual([0, 1, 2]);
-  });
-  it('set 1', () => {
-    const seq = new Seq(0, x => x + 1);
-    const result = seq.take(2);
-    const actual = [];
-    for (const value of result) {
-      actual.push(value);
-    }
-    expect(actual).toEqual([0, 1]);
-
-    const actual2 = [];
-    for (const value of seq.take(3)) {
-      actual2.push(value);
-    }
-    expect(actual2).toEqual([0, 1, 2]);
+    resolve(val);
   });
 
-  // it('set 2', () => {
-  //   const seq = new Seq(1, x => x + 1);
-  //   const result = seq.skip(200).take(3);
-  //   const actual = [];
-  //   for (const value of result) {
-  //     actual.push(value);
-  //   }
-  //   expect(actual).toEqual([201, 202, 203]);
+describe('HexletCo', () => {
+  it('set 1', (done) => {
+    co(function* () {
+      const x = yield getPromise(5);
+      expect(x).toBe(5);
+      done();
+    });
+  });
 
-  //   const actual2 = [];
-  //   for (const value of seq.skip(5).skip(5).take(1)) {
-  //     actual2.push(value);
-  //   }
-  //   expect(actual2).toEqual([11]);
+  // it('set 2', (done) => {
+  //   co(function* () {
+  //     const a = yield getPromise(1);
+  //     const b = yield getPromise(2);
+  //     const c = yield getPromise(3);
+
+  //     expect([a, b, c]).toEqual([1, 2, 3]);
+  //     done();
+  //   });
   // });
 
-  // it('set 3', () => {
-  //   const seq = new Seq(0, x => (x % 3 === 0 ? x + 1 : x + 2));
-  //   const result = seq.take(10);
-  //   const actual = [];
-  //   for (const value of result) {
-  //     actual.push(value);
-  //   }
-  //   expect(actual).toEqual([0, 1, 3, 4, 6, 7, 9, 10, 12, 13]);
+  // it('set 3', (done) => {
+  //   let error;
 
-  //   const actual2 = [];
-  //   for (const value of seq.take(3)) {
-  //     actual2.push(value);
-  //   }
-  //   expect(actual2).toEqual([0, 1, 3]);
+  //   co(function* () {
+  //     try {
+  //       yield getPromise(1, new Error('boom'));
+  //     } catch (err) {
+  //       error = err;
+  //     }
+
+  //     expect(error.message).toBe('boom');
+  //     const ret = yield getPromise(1);
+  //     expect(ret).toBe(1);
+  //     done();
+  //   });
   // });
 
-  // it('set 4', () => {
-  //   const seq = new Seq(7, x => x + 2);
-  //   const result = seq.take(2);
-  //   const actual = [];
-  //   for (const value of result) {
-  //     actual.push(value);
-  //   }
-  //   expect(actual).toEqual([7, 9]);
+  // it('set 4', (done) => {
+  //   co(function* () {
+  //     let error;
+  //     try {
+  //       yield getPromise(5);
+  //       throw new Error('boom');
+  //     } catch (err) {
+  //       error = err;
+  //     }
+  //     expect(error.message).toBe('boom');
+  //     done();
+  //   });
+  // });
+  // it('set 5', (done) => {
+  //   co(function* () {
+  //     const a = yield getPromise(1);
+  //     return a;
+  //   }).then((a) => {
+  //     expect(a).toBe(1);
+  //     done();
+  //   });
+  // });
 
-  //   const actual2 = [];
-  //   for (const value of seq.skip(5).take(3)) {
-  //     actual2.push(value);
-  //   }
-  //   expect(actual2).toEqual([17, 19, 21]);
+  // it('set 6', (done) => {
+  //   co(function* () {
+  //     const result = yield getPromise(1, new Error('boom'));
+  //     return result;
+  //   }).catch((error) => {
+  //     expect(error.message).toBe('boom');
+  //     done();
+  //   });
+  // });
+
+  // it('set 7', (done) => {
+  //   co(function* () {
+  //     const a = yield getPromise(1);
+  //     const b = yield getPromise(a * 4);
+  //     const c = yield getPromise(b / 2);
+
+  //     expect([a, b, c]).toEqual([1, 4, 2]);
+  //     done();
+  //   });
   // });
 });
