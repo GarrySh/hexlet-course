@@ -17,7 +17,8 @@
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "babel-node": "babel-node",
     "prepublishOnly": "npm run build",
-    "eslint": "eslint"
+    "eslint": "eslint",
+    "nodemon": "nodemon --exec babel-node src/bin/phonebook.js"
   },
   "devDependencies": {
     "babel-cli": "*",
@@ -32,11 +33,13 @@
     "eslint-plugin-jest": "*",
     "istanbul": "^0.4.5",
     "jest": "^22.1.3",
-    "jest-cli": "*"
+    "jest-cli": "*",
+    "nodemon": "^1.15.1"
   },
   "dependencies": {
     "nock": "*",
-    "babel-polyfill": "*"
+    "babel-polyfill": "*",
+    "axios": "^0.18.0"
   },
   "repository": {
     "type": "git",
